@@ -4,14 +4,10 @@
     HERBRETEAU Mathis, LE POTTIER Mathias, ROBERT Paul-Aimé
 """
 
-import numpy as np
 import pandas as pd
-import matplotlib
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.model_selection import train_test_split
 
-PATH = '/data/german_credit_data.csv'
+PATH = 'data/german_credit_data.csv'
 
 NUM_COLS = [
     'month_duration',
@@ -41,7 +37,13 @@ CAT_COLS = [
 
 
 class DataSet():
+    """
+        Class Data set
+    """
     def __init__(self,data_path = PATH,categorical_columns = CAT_COLS,numeric_columns = NUM_COLS):
+        """
+            input: str
+        """
         self.data_path = data_path
         self.categorical_columns = categorical_columns
         self.numeric_columns = numeric_columns
@@ -75,7 +77,7 @@ class DataSet():
 
         """
         if self.df is None :
-            print ('Error loading data: df passed ass an agrgument is None')
+            print ('Error loading data: df passed as an agrgument is None')
             return None
 
         for col in self.numeric_columns:
@@ -95,6 +97,3 @@ class DataSet():
         # Split the data into training and testing sets
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(features_encoded, target, test_size=test_size, random_state=42)
         return self.X_train, self.X_test, self.y_train, self.y_test
-    
-    def sepecific_prep(self):
-        pass
