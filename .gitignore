@@ -1,0 +1,7 @@
+shell.nix
+
+.venv/
+
+__pychach__/
+
+.pyc/
