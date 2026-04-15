@@ -81,7 +81,7 @@ class DataSet():
             return None
 
         for col in self.numeric_columns:
-            self.df[col] = pd.to_numeric(df[col], errors='coerce')
+            self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
         
         self.df['target_flag'] = self.df['target'].apply(lambda x: 1 if x.strip().lower() == 'good' else 0)
 
