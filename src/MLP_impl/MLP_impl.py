@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from src.utils.data_prep import DataSet
 from sklearn.neural_network import MLPClassifier
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
 
@@ -38,6 +39,29 @@ def plot_local(shap_values, expected_val, X_data, feature_names, index=0):
     plt.title(f"Explicabilité Locale (Observation n°{index})")
     shap.waterfall_plot(exp)
 
+
+
+# ============================================
+#               Surrogate
+# ============================================
+
+def surrogate_dataset(X_train, model):
+    surrogate_X = X_train.copy()
+    surrogate_y = model.predict(X_train)
+    return surrogate_X, surrogate_y
+
+def surrogate_model(X_train, y_train, model):
+    surrogate_X, surrogate_y = surrogate_dataset(X_train, y_train, model)
+    model_dt = DecisionTreeClassifier(random_state=42, max_depth=4)
+    model_dt.fit(surrogate_X, surrogate_y)
+
+    train_acc = model_dt.score(X_train, y_train)
+
+    plt.figure(figsize=(20, 10))
+    plot_tree(model_dt, feature_names=X_train.columns, class_names=[str(c) for c in model_dt.classes_], filled=True)
+    plt.title(f"Decision Tree | Train Acc: {train_acc:.4f} ", fontsize=14)
+    plt.show()
+
 if __name__ == "__main__":
     # 1. Données
     dataset = SpecificDataSet()
@@ -58,3 +82,8 @@ if __name__ == "__main__":
     random_idx = np.random.randint(0, len(X_test))
     plot_local(shap_vals, expected_val, X_test, dataset.feature_names, index=random_idx)
     plt.show()
+
+
+
+    # Surrogate model
+    surrogate_model(X_train, y_train, model)
