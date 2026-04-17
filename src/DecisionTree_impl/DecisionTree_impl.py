@@ -4,9 +4,7 @@
     HERBRETEAU Mathis, LE POTTIER Mathias, ROBERT Paul-Aimé
 """
 
-import shap
 from sklearn import tree
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import classification_report
 import numpy as np
 from src.DecisionTree_impl.SpecificDataSet import SpecificDataSet
