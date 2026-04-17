@@ -5,17 +5,16 @@
 """
 
 import shap
-import xgboost as xgb
+from sklearn import tree
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import classification_report
 import numpy as np
-from src.XGBoost_impl.SpecificDataSet import SpecificDataSet
+from src.DecisionTree_impl.SpecificDataSet import SpecificDataSet
 import matplotlib.pyplot as plt
 
 
-class XGBoostImpl():
+class DecisionTreeImpl():
     def __init__(self):
-        self.scaler = MinMaxScaler()
         self.model = None
         self.data_set = SpecificDataSet()
         self.X_train,self.X_test,self.y_train, self.y_test = self.data_set.specific_prep()
@@ -32,7 +31,7 @@ class XGBoostImpl():
         print("Début de l'entraînement...")
         
         
-        self.model = xgb.XGBClassifier(enable_categorical = True)
+        self.model = tree.DecisionTreeClassifier(max_depth = 3)
 
         self.model.fit(self.X_train, self.y_train)
         print("Entraînement terminé.")
@@ -75,7 +74,7 @@ class XGBoostImpl():
         return self.model.predict(input_scaled)
 
 
-    def test_random_prediction(self, do_explain = False):
+    def test_random_prediction(self ):
         """
         Sélectionne une ligne aléatoire dans le set de test, 
         prédit les cibles et affiche la comparaison avec le réel.
@@ -103,22 +102,7 @@ class XGBoostImpl():
         print("val réel : ",true_y)
         print("val prédite : ",pred_y)
 
-        if do_explain:
-            self.explain_line(random_index)
 
-    def explain_line(self,line = 3):
-
-        if self.model is None:
-            print("Erreur : Le modèle doit être entraîné avant le test.")
-            return
-        # Create a tree explainer
-        xgb_explainer = shap.TreeExplainer(self.model)
-
-
-        shap_explainer_values = xgb_explainer(self.X_test)
-        shap.waterfall_plot(shap_explainer_values[line])
-
-        plt.show()
 
     def explain_global(self):
 
@@ -126,20 +110,15 @@ class XGBoostImpl():
             print("Erreur : Le modèle doit être entraîné avant le test.")
             return
 
-
-        explainer = shap.TreeExplainer(self.model)
-        shap_values = explainer(self.X_test)
-
-        # Graphique global complet
-        shap.summary_plot(shap_values, self.X_test)
+        tree.plot_tree(self.model,)
 
         plt.show()
 if __name__ == "__main__":
-    model = XGBoostImpl()
+    model = DecisionTreeImpl()
     model.train()
     model.explain_global()
     input_word = 0
     while input_word != 1:
         input_word = input("press 1 to exit\n>>")
-        model.test_random_prediction(do_explain=True)
+        model.test_random_prediction()
 
