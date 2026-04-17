@@ -196,8 +196,30 @@ def calculate_accuracy(model, inferenceModel) :
 
 
 
+
+#==========================================
+#           Calcul accuracy
+#==========================================
+
+def inference_example(inference_engine, evidence):
+    result = inference_engine.query(variables=['target_flag'], evidence=evidence, show_progress=False)
+    print("="*32)
+    print("Inference result for evidence:", evidence)
+    print(result) 
+    print("="*32)
+
+
 if __name__ == "__main__":
+
+    evidence = {
+        'month_duration': 'court',
+        'credit_amount': 'faible',
+        'age': 'jeune'
+    }
+
+
     learned_model = learn_bayesian_structure(train_df)
     learn_bayesian_cpds(learned_model, train_df)
     inference_engine = variable_elimination_inference(learned_model)
     calculate_accuracy(learned_model, inference_engine)
+    inference_example(inference_engine, evidence)
