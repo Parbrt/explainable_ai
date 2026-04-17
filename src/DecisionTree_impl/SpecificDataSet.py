@@ -12,7 +12,7 @@ class SpecificDataSet(DataSet):
         if self.df is not None:
             for col in self.categorical_columns:
                 self.df[col] = self.df[col].astype("category")
-        self.X_train, self.X_test, self.y_test, self.y_train = self.prep_data(one_hot_enc=False)
+        self.X_train, self.X_test, self.y_test, self.y_train = self.prep_data(one_hot_enc=True)
         return self.X_train, self.X_test, self.y_test, self.y_train
 
 if __name__ == "__main__":
