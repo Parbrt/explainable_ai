@@ -6,6 +6,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
 
 class SpecificDataSet(DataSet):
     def specific_prep(self, test_size=0.2, one_hot_enc=True):
@@ -50,7 +51,7 @@ def surrogate_dataset(X_train, model):
     surrogate_y = model.predict(X_train)
     return surrogate_X, surrogate_y
 
-def surrogate_model(X_train, y_train, model, feature_names=None):
+def surrogate_decisionTree_model(X_train, y_train, model, feature_names=None):
     surrogate_X, surrogate_y = surrogate_dataset(X_train, model)
     model_dt = DecisionTreeClassifier(random_state=42, max_depth=4)
     model_dt.fit(surrogate_X, surrogate_y)
@@ -61,6 +62,16 @@ def surrogate_model(X_train, y_train, model, feature_names=None):
     plot_tree(model_dt, feature_names=feature_names, class_names=[str(c) for c in model_dt.classes_], filled=True)
     plt.title(f"Decision Tree | Train Acc: {train_acc:.4f} ", fontsize=14)
     plt.show()
+
+def surrogate_linear_model(X_train, y_train, model):
+    surrogate_X, surrogate_y = surrogate_dataset(X_train, model)
+    model_lr = LinearRegression()
+    model_lr.fit(surrogate_X, surrogate_y)
+
+    train_acc = model_lr.score(X_train, y_train)
+    print(f"Linear Regression Surrogate | Train Acc: {train_acc:.4f}")
+
+
 
 if __name__ == "__main__":
     # 1. Données
@@ -86,4 +97,6 @@ if __name__ == "__main__":
 
 
     # Surrogate model
-    surrogate_model(X_train, y_train, model, feature_names=list(dataset.feature_names))
+    surrogate_decisionTree_model(X_train, y_train, model, feature_names=list(dataset.feature_names))
+    surrogate_linear_model(X_train, y_train, model)
+
