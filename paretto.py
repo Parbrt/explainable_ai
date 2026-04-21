@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 # 1. Données
-models = ['BAYESIAN', 'Surro decisionTree', 'Surro linear', 'MLP']
-accuracy = [0.75, 0.75, 0.28, 0.80]
-explainability = [8, 10, 7, 1]
+models = ['BAYESIAN', 'Surro decisionTree', 'Surro linear', 'MLP', 'XGBoost']
+accuracy = [0.75, 0.75, 0.28, 0.80, 0.85]
+explainability = [8, 10, 7, 1, 5]
 
 points = list(zip(models, accuracy, explainability))
 
