@@ -102,8 +102,7 @@ if __name__ == "__main__":
     # 4. Affichage
     plot_global(shap_vals, X_test, dataset.feature_names)
     
-    random_idx = np.random.randint(0, len(X_test))
-    plot_local(shap_vals, expected_val, X_test, dataset.feature_names, index=random_idx)
+    plot_local(shap_vals, expected_val, X_test, dataset.feature_names, index=7)
     plt.show()
 
 
