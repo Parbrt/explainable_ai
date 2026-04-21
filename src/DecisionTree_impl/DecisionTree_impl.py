@@ -5,7 +5,7 @@
 """
 
 from sklearn import tree
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, roc_auc_score
 import numpy as np
 from src.DecisionTree_impl.SpecificDataSet import SpecificDataSet
 import matplotlib.pyplot as plt
@@ -56,10 +56,12 @@ class DecisionTreeImpl():
             
         f1 = report['weighted avg']['f1-score']
         acc = report['accuracy']
+        auc = roc_auc_score(true_vals, pred_vals )
             
         print(f"* Accuracy : {acc:.2%}")
         print(f"* F1-Score : {f1:.2%}")
-            
+        print(f"* AUC : {auc:.2%}")
+
     def predict(self, input_data):
         """
          

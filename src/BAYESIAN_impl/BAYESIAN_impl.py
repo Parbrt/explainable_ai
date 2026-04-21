@@ -5,7 +5,7 @@ from pgmpy.models import DiscreteBayesianNetwork
 from pgmpy.estimators import HillClimbSearch
 from pgmpy.estimators import MaximumLikelihoodEstimator
 from pgmpy.inference import VariableElimination
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, roc_auc_score
 import networkx as nx
 import matplotlib.pyplot as plt
 import warnings
@@ -189,10 +189,19 @@ def calculate_accuracy(model, inferenceModel) :
     valid = [(p, t) for p, t in zip(y_pred, y_true) if p is not None]
     y_pred_clean, y_true_clean = zip(*valid)
 
+    y_pred_num = [int(p) for p in y_pred_clean]
+    y_true_num = [int(t) for t in y_true_clean]
+
+    acc = accuracy_score(y_true_num, y_pred_num)
+    auc = roc_auc_score(y_true_num, y_pred_num)
+
     print("="*32)
-    print(f"Accuracy: {accuracy_score(y_true_clean, y_pred_clean):.4f}")
-    print(classification_report(y_true_clean, y_pred_clean))
+    print(f"Accuracy: {acc:.4f}")
+    print(classification_report(y_true_num, y_pred_num))
+    print(f"Bayesian AUC: {auc:.4f}")
     print("="*32)
+
+    return acc, auc
 
 
 

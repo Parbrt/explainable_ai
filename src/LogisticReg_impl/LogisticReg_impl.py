@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from src.utils.data_prep import DataSet
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, roc_auc_score, accuracy_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, roc_auc_score
 
@@ -42,6 +42,7 @@ if __name__ == "__main__":
     
     model = train_logistic_regression(X_train, y_train)
     print("--- Rapport de Classification ---\n", classification_report(y_test, model.predict(X_test)))
+    print("Logistic Regression AUC:", roc_auc_score(y_test, model.predict(X_test)))
     
     y_proba = model.predict_proba(X_test)[:, 1]
     print("AUC :", roc_auc_score(y_test, y_proba))

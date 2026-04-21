@@ -7,6 +7,7 @@ from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
+from sklearn import metrics
 
 class SpecificDataSet(DataSet):
     def specific_prep(self, test_size=0.2, one_hot_enc=True):
@@ -57,6 +58,7 @@ def surrogate_decisionTree_model(X_train, y_train, model, feature_names=None):
     model_dt.fit(surrogate_X, surrogate_y)
 
     train_acc = model_dt.score(X_train, y_train)
+    print("Decision Tree Surrogate AUC:", metrics.roc_auc_score(y_train, model_dt.predict(X_train)))
 
     plt.figure(figsize=(20, 10))
     plot_tree(model_dt, feature_names=feature_names, class_names=[str(c) for c in model_dt.classes_], filled=True)
@@ -70,6 +72,8 @@ def surrogate_linear_model(X_train, y_train, model):
 
     train_acc = model_lr.score(X_train, y_train)
     print(f"Linear Regression Surrogate | Train Acc: {train_acc:.4f}")
+    print("surrogate linear model AUC:", metrics.roc_auc_score(y_train, model_lr.predict(X_train)))
+
 
 
 
@@ -82,6 +86,8 @@ if __name__ == "__main__":
     # 2. Entraînement & Évaluation
     model = train_mlp(X_train, y_train)
     print("--- Rapport de Classification ---\n", classification_report(y_test, model.predict(X_test)))
+    print("Accuracy:", metrics.accuracy_score(y_test, model.predict(X_test)))
+    print("MLP AUC:", metrics.roc_auc_score(y_test, model.predict(X_test)))
     
     # 3. Calcul SHAP
     print("Calcul des valeurs SHAP en cours...")
