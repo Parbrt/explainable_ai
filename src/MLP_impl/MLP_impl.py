@@ -6,7 +6,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 
 class SpecificDataSet(DataSet):
@@ -58,7 +58,10 @@ def surrogate_decisionTree_model(X_train, y_train, model, feature_names=None):
     model_dt.fit(surrogate_X, surrogate_y)
 
     train_acc = model_dt.score(X_train, y_train)
-    print("Decision Tree Surrogate AUC:", metrics.roc_auc_score(y_train, model_dt.predict(X_train)))
+    original_proba = model.predict_proba(X_train)[:, 1]
+    surrogate_proba = model_dt.predict_proba(X_train)[:, 1]
+    print("Decision Tree Surrogate AUC:", metrics.roc_auc_score(y_train, surrogate_proba))
+    print("Decision Tree Surrogate r2:", metrics.r2_score(original_proba, surrogate_proba))
 
     plt.figure(figsize=(20, 10))
     plot_tree(model_dt, feature_names=feature_names, class_names=[str(c) for c in model_dt.classes_], filled=True)
@@ -67,12 +70,15 @@ def surrogate_decisionTree_model(X_train, y_train, model, feature_names=None):
 
 def surrogate_linear_model(X_train, y_train, model):
     surrogate_X, surrogate_y = surrogate_dataset(X_train, model)
-    model_lr = LinearRegression()
+    model_lr = LogisticRegression(max_iter=1000)
     model_lr.fit(surrogate_X, surrogate_y)
 
     train_acc = model_lr.score(X_train, y_train)
+    original_proba = model.predict_proba(X_train)[:, 1]
+    surrogate_proba = model_lr.predict_proba(X_train)[:, 1]
     print(f"Linear Regression Surrogate | Train Acc: {train_acc:.4f}")
-    print("surrogate linear model AUC:", metrics.roc_auc_score(y_train, model_lr.predict(X_train)))
+    print("surrogate linear model AUC:", metrics.roc_auc_score(y_train, surrogate_proba))
+    print("Linear Regression Surrogate r2:", metrics.r2_score(original_proba, surrogate_proba))
 
 
 
@@ -87,7 +93,7 @@ if __name__ == "__main__":
     model = train_mlp(X_train, y_train)
     print("--- Rapport de Classification ---\n", classification_report(y_test, model.predict(X_test)))
     print("Accuracy:", metrics.accuracy_score(y_test, model.predict(X_test)))
-    print("MLP AUC:", metrics.roc_auc_score(y_test, model.predict(X_test)))
+    print("MLP AUC:", metrics.roc_auc_score(y_test, model.predict_proba(X_test)[:, 1]))
     
     # 3. Calcul SHAP
     print("Calcul des valeurs SHAP en cours...")

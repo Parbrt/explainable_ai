@@ -42,8 +42,6 @@ if __name__ == "__main__":
     
     model = train_logistic_regression(X_train, y_train)
     print("--- Rapport de Classification ---\n", classification_report(y_test, model.predict(X_test)))
-    print("Logistic Regression AUC:", roc_auc_score(y_test, model.predict(X_test)))
-    
     y_proba = model.predict_proba(X_test)[:, 1]
     print("AUC :", roc_auc_score(y_test, y_proba))
     

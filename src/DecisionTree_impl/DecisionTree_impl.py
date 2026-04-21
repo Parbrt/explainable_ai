@@ -56,7 +56,7 @@ class DecisionTreeImpl():
             
         f1 = report['weighted avg']['f1-score']
         acc = report['accuracy']
-        auc = roc_auc_score(true_vals, pred_vals )
+        auc = roc_auc_score(true_vals, self.model.predict_proba(self.X_test)[:, 1])
             
         print(f"* Accuracy : {acc:.2%}")
         print(f"* F1-Score : {f1:.2%}")
