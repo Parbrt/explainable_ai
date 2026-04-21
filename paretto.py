@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 
-models = ['BAYESIAN', 'Surro decisionTree', 'Surro linear', 'MLP', 'XGBoost', 'Decision Tree', 'Logistic Regression']
-accuracy = [0.75, 0.75, 0.78, 0.80, 0.805, 0.76, 0.81]
-AUC = [0.66, 0.80, 0.83, 0.80, 0.79, 0.76, 0.81]
-explainability = [7.5, 7, 6.5, 1, 2, 8.5, 7]
+models = ['BAYESIAN', 'MLP', 'XGBoost', 'Decision Tree', 'Logistic Regression', 'XGBoost_SHAP', 'MLP_SHAP']
+accuracy = [0.75, 0.80, 0.805, 0.76, 0.81, 0.80, 0.805]
+AUC = [0.66, 0.80, 0.79, 0.76, 0.81, 0.80, 0.79]
+explainability = [7.5, 1, 2, 8.5, 7, 6, 6]
 
 points = list(zip(models, AUC, explainability))
 points_sorted = sorted(points, key=lambda x: (x[1], x[2]), reverse=True)
